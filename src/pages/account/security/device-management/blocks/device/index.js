@@ -1,2 +1,2 @@
-export * from './Device';
-export * from './deviceData';
+export * from "./device.jsx";
+export * from "./deviceData.js";
