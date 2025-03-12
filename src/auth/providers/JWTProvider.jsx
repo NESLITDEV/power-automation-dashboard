@@ -50,9 +50,10 @@ const AuthProvider = ({ children }) => {
       });
 
       if (response.data) {
-        setCurrentUser(response.data);
-        setAuth({ token: response.data.token });
-        return response.data;
+        const userData = response.data;
+        setCurrentUser(userData);
+        saveAuth(userData);
+        return userData;
       }
     } catch (error) {
       setCurrentUser(null);
