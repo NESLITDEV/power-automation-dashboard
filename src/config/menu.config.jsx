@@ -49,10 +49,10 @@ export const MENU_SIDEBAR = [
           },
           {
             title: "More",
-            collapse: true,
+      collapse: true,
             collapseTitle: "Show less",
             expandTitle: "Show 4 more",
-            dropdownProps: {
+      dropdownProps: {
               placement: "right-start",
             },
             children: [
@@ -107,10 +107,10 @@ export const MENU_SIDEBAR = [
       },
       {
         title: "More",
-        collapse: true,
+    collapse: true,
         collapseTitle: "Show less",
         expandTitle: "Show 3 more",
-        dropdownProps: {
+    dropdownProps: {
           placement: "right-start",
         },
         children: [
@@ -280,10 +280,10 @@ export const MENU_SIDEBAR = [
       },
       {
         title: "More",
-        collapse: true,
+    collapse: true,
         collapseTitle: "Show less",
         expandTitle: "Show 3 more",
-        dropdownProps: {
+    dropdownProps: {
           placement: "right-start",
         },
         children: [
@@ -1169,7 +1169,7 @@ export const MENU_MEGA = [
       },
       {
         title: "Licenses & FAQ",
-        tooltip: {
+    tooltip: {
           title: "Learn more about licenses",
           placement: "right",
         },

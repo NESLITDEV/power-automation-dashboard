@@ -54,8 +54,18 @@ const Signup = () => {
         if (!register) {
           throw new Error("JWTProvider is required for this form.");
         }
-        await register(values.email, values.password, values.userName);
-        sessionStorage.setItem("verificationEmail", values.email);
+        const response = await register(
+          values.email,
+          values.password,
+          values.userName
+        );
+        sessionStorage.setItem(
+          "registrationData",
+          JSON.stringify({
+            ...response,
+            email: values.email,
+          })
+        );
         navigate("/auth/check-email");
       } catch (error) {
         if (error instanceof AxiosError && error.response) {

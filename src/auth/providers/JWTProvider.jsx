@@ -48,12 +48,14 @@ const AuthProvider = ({ children }) => {
         email,
         password,
       });
-
-      if (response.data) {
+      if (response.data && response.data.isSuccessfull) {
         const userData = response.data;
         setCurrentUser(userData);
         saveAuth(userData);
         return userData;
+      }
+      else {
+        throw new Error(response.data.responseMessage || "Login failed");
       }
     } catch (error) {
       setCurrentUser(null);
@@ -123,6 +125,25 @@ const AuthProvider = ({ children }) => {
     setCurrentUser(undefined);
   };
 
+  const confirmEmailWithUrl = async (url) => {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Email Confirmation Error:",
+        error.response?.status,
+        error.response?.data || error.message
+      );
+      if (error.response) {
+        throw new Error(
+          error.response.data.message || "Email confirmation failed"
+        );
+      }
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -138,6 +159,7 @@ const AuthProvider = ({ children }) => {
         changePassword,
         logout,
         verify,
+        confirmEmailWithUrl,
       }}
     >
       {children}
