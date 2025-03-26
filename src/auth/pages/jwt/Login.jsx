@@ -8,6 +8,8 @@ import { toAbsoluteUrl } from "@/utils";
 import { useAuthContext } from "@/auth";
 import { useLayout } from "@/providers";
 import { Alert } from "@/components";
+import { FormattedMessage, useIntl } from "react-intl";
+
 const loginSchema = Yup.object().shape({
   email: Yup.string()
     .email("Wrong email format")
@@ -20,12 +22,15 @@ const loginSchema = Yup.object().shape({
     .required("Password is required"),
   remember: Yup.boolean(),
 });
+
 const initialValues = {
   email: "",
   password: "",
   remember: false,
 };
+
 const Login = () => {
+  const intl = useIntl();
   const [loading, setLoading] = useState(false);
   const { login } = useAuthContext();
   const navigate = useNavigate();
@@ -33,6 +38,7 @@ const Login = () => {
   const from = location.state?.from?.pathname || "/";
   const [showPassword, setShowPassword] = useState(false);
   const { currentLayout } = useLayout();
+
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
@@ -58,10 +64,12 @@ const Login = () => {
       setLoading(false);
     },
   });
+
   const togglePassword = (event) => {
     event.preventDefault();
     setShowPassword(!showPassword);
   };
+
   return (
     <div className="card max-w-[390px] w-full">
       <form
@@ -71,14 +79,14 @@ const Login = () => {
       >
         <div className="text-center mb-2.5">
           <h3 className="text-lg font-semibold text-gray-900 leading-none mb-2.5">
-            Sign in
+            <FormattedMessage id="AUTH.LOGIN.TITLE" />
           </h3>
           <div className="flex items-center justify-center font-medium">
             <span className="text-2sm text-gray-600 me-1.5">
-              Need an account?
+              <FormattedMessage id="AUTH.LOGIN.NO_ACCOUNT" />
             </span>
             <Link to="/auth/signup" className="text-2sm link">
-              Sign up
+              <FormattedMessage id="AUTH.LOGIN.SIGN_UP" />
             </Link>
           </div>
         </div>
@@ -116,15 +124,24 @@ const Login = () => {
         {formik.status && <Alert variant="danger">{formik.status}</Alert>}
 
         <div className="flex flex-col gap-1">
-          <label className="form-label text-gray-900">Email</label>
+          <label className="form-label text-gray-900">
+            <FormattedMessage id="AUTH.LOGIN.EMAIL" />
+          </label>
           <label className="input">
             <input
               placeholder="Enter your email"
+              type="email"
               autoComplete="off"
               {...formik.getFieldProps("email")}
-              className={clsx("form-control", {
-                "is-invalid": formik.touched.email && formik.errors.email,
-              })}
+              className={clsx(
+                "form-control bg-transparent",
+                {
+                  "is-invalid": formik.touched.email && formik.errors.email,
+                },
+                {
+                  "is-valid": formik.touched.email && !formik.errors.email,
+                }
+              )}
             />
           </label>
           {formik.touched.email && formik.errors.email && (
@@ -135,21 +152,26 @@ const Login = () => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <div className="flex items-center justify-between gap-1">
-            <label className="form-label text-gray-900">Password</label>
-            <Link to="/auth/reset-password" className="text-2sm link shrink-0">
-              Forgot Password?
-            </Link>
-          </div>
+          <label className="form-label text-gray-900">
+            <FormattedMessage id="AUTH.LOGIN.PASSWORD" />
+          </label>
           <label className="input">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               autoComplete="off"
               {...formik.getFieldProps("password")}
-              className={clsx("form-control", {
-                "is-invalid": formik.touched.password && formik.errors.password,
-              })}
+              className={clsx(
+                "form-control bg-transparent",
+                {
+                  "is-invalid":
+                    formik.touched.password && formik.errors.password,
+                },
+                {
+                  "is-valid":
+                    formik.touched.password && !formik.errors.password,
+                }
+              )}
             />
             <button className="btn btn-icon" onClick={togglePassword}>
               <KeenIcon
@@ -179,7 +201,9 @@ const Login = () => {
             type="checkbox"
             {...formik.getFieldProps("remember")}
           />
-          <span className="checkbox-label">Remember me</span>
+          <span className="checkbox-label">
+            <FormattedMessage id="AUTH.LOGIN.REMEMBER_ME" />
+          </span>
         </label>
 
         <button
@@ -187,10 +211,15 @@ const Login = () => {
           className="btn btn-primary flex justify-center grow"
           disabled={loading || formik.isSubmitting}
         >
-          {loading ? "Please wait..." : "Sign In"}
+          {loading ? (
+            "Please wait..."
+          ) : (
+            <FormattedMessage id="AUTH.LOGIN.SUBMIT" />
+          )}
         </button>
       </form>
     </div>
   );
 };
+
 export { Login };

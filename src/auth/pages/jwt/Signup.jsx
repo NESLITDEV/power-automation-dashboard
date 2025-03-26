@@ -8,6 +8,8 @@ import { toAbsoluteUrl } from "@/utils";
 import { Alert, KeenIcon } from "@/components";
 import { useLayout } from "@/providers";
 import { AxiosError } from "axios";
+import { FormattedMessage, useIntl } from "react-intl";
+
 const initialValues = {
   email: "",
   password: "",
@@ -15,6 +17,7 @@ const initialValues = {
   acceptTerms: false,
   userName: "",
 };
+
 const signupSchema = Yup.object().shape({
   email: Yup.string()
     .email("Wrong email format")
@@ -36,7 +39,9 @@ const signupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Password and Confirm Password didn't match"),
   acceptTerms: Yup.bool().required("You must accept the terms and conditions"),
 });
+
 const Signup = () => {
+  const intl = useIntl();
   const [loading, setLoading] = useState(false);
   const { register } = useAuthContext();
   const navigate = useNavigate();
@@ -45,6 +50,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { currentLayout } = useLayout();
+
   const formik = useFormik({
     initialValues,
     validationSchema: signupSchema,
@@ -82,14 +88,17 @@ const Signup = () => {
       setLoading(false);
     },
   });
+
   const togglePassword = (event) => {
     event.preventDefault();
     setShowPassword(!showPassword);
   };
+
   const toggleConfirmPassword = (event) => {
     event.preventDefault();
     setShowConfirmPassword(!showConfirmPassword);
   };
+
   return (
     <div className="card max-w-[370px] w-full">
       <form
@@ -99,14 +108,14 @@ const Signup = () => {
       >
         <div className="text-center mb-2.5">
           <h3 className="text-lg font-semibold text-gray-900 leading-none mb-2.5">
-            Sign up
+            <FormattedMessage id="AUTH.REGISTER.TITLE" />
           </h3>
           <div className="flex items-center justify-center font-medium">
             <span className="text-2sm text-gray-600 me-1.5">
-              Already have an Account ?
+              <FormattedMessage id="AUTH.REGISTER.HAS_ACCOUNT" />
             </span>
             <Link to="/auth/login" className="text-2sm link">
-              Sign In
+              <FormattedMessage id="AUTH.REGISTER.SIGN_IN" />
             </Link>
           </div>
         </div>
@@ -114,7 +123,9 @@ const Signup = () => {
         {formik.status && <Alert variant="danger">{formik.status}</Alert>}
 
         <div className="flex flex-col gap-1">
-          <label className="form-label text-gray-900">Username</label>
+          <label className="form-label text-gray-900">
+            <FormattedMessage id="AUTH.REGISTER.USERNAME" />
+          </label>
           <label className="input">
             <input
               placeholder="Enter your username"
@@ -142,7 +153,9 @@ const Signup = () => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="form-label text-gray-900">Email</label>
+          <label className="form-label text-gray-900">
+            <FormattedMessage id="AUTH.REGISTER.EMAIL" />
+          </label>
           <label className="input">
             <input
               placeholder="Enter your email"
@@ -168,7 +181,9 @@ const Signup = () => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="form-label text-gray-900">Password</label>
+          <label className="form-label text-gray-900">
+            <FormattedMessage id="AUTH.REGISTER.PASSWORD" />
+          </label>
           <label className="input">
             <input
               type={showPassword ? "text" : "password"}
@@ -210,7 +225,9 @@ const Signup = () => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="form-label text-gray-900">Confirm Password</label>
+          <label className="form-label text-gray-900">
+            <FormattedMessage id="AUTH.REGISTER.CONFIRM_PASSWORD" />
+          </label>
           <label className="input">
             <input
               type={showConfirmPassword ? "text" : "password"}
@@ -260,13 +277,9 @@ const Signup = () => {
             {...formik.getFieldProps("acceptTerms")}
           />
           <span className="checkbox-label">
-            I accept{" "}
-            <Link to="#" className="text-2sm link">
-              Terms & Conditions
-            </Link>
+            <FormattedMessage id="AUTH.REGISTER.TERMS" />
           </span>
         </label>
-
         {formik.touched.acceptTerms && formik.errors.acceptTerms && (
           <span role="alert" className="text-danger text-xs mt-1">
             {formik.errors.acceptTerms}
@@ -278,10 +291,15 @@ const Signup = () => {
           className="btn btn-primary flex justify-center grow"
           disabled={loading || formik.isSubmitting}
         >
-          {loading ? "Please wait..." : "Sign UP"}
+          {loading ? (
+            "Please wait..."
+          ) : (
+            <FormattedMessage id="AUTH.REGISTER.SUBMIT" />
+          )}
         </button>
       </form>
     </div>
   );
 };
+
 export { Signup };

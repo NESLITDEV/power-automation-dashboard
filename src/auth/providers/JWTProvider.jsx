@@ -4,7 +4,7 @@ import { createContext, useState } from "react";
 import * as authHelper from "../_helpers";
 
 // Default API URL in case environment variable is not set
-const DEFAULT_API_URL = "https://6368-154-192-137-11.ngrok-free.app/api";
+const DEFAULT_API_URL = import.meta.env.VITE_APP_API_URL;
 const API_URL = import.meta.env.VITE_APP_API_URL || DEFAULT_API_URL;
 
 // Configure axios defaults
@@ -53,8 +53,7 @@ const AuthProvider = ({ children }) => {
         setCurrentUser(userData);
         saveAuth(userData);
         return userData;
-      }
-      else {
+      } else {
         throw new Error(response.data.responseMessage || "Login failed");
       }
     } catch (error) {
@@ -127,7 +126,11 @@ const AuthProvider = ({ children }) => {
 
   const confirmEmailWithUrl = async (url) => {
     try {
-      const response = await axios.get(url);
+      // Extract the path after /api from the original URL
+      const urlPath = url.split("/api")[1];
+      // Construct new URL using the API_URL from environment
+      const newUrl = `${API_URL}${urlPath}`;
+      const response = await axios.get(newUrl);
       return response.data;
     } catch (error) {
       console.error(
